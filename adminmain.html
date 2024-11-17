@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillRank Admin - Add Student</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- AOS (Animation on Scroll) -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    /* General Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Body Styling */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(45deg, #9c27b0, #6a1b9a);
+      background-size: 400% 400%;
+      animation: gradientAnimation 10s ease infinite;
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    /* Keyframe for gradient animation */
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Keyframe for fade-in animation */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Container Styling */
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 900px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Header Styling */
+    header {
+      background-color: #9c27b0;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    header img {
+      height: 50px;
+      margin-right: 15px;
+      vertical-align: middle;
+    }
+
+    header h1 {
+      display: inline-block;
+      font-size: 1.8rem;
+      font-weight: 500;
+    }
+
+    /* Form Title */
+    h2 {
+      text-align: center;
+      color: #9c27b0;
+      font-weight: 600;
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+    }
+
+    /* Label Styling */
+    label {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    label i {
+      color: #9c27b0;
+    }
+
+    /* Form Fields Layout */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .form-row > div {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    /* Input & Select Styling */
+    input[type="text"], input[type="email"], input[type="tel"], input[type="password"], input[type="url"], select, input[type="file"] {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      background-color: #f7f7f9;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="password"]:focus, select:focus, input[type="file"]:focus {
+      border-color: #9c27b0;
+      background-color: #f2f3f7;
+      outline: none;
+      box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
+    }
+
+    /* Button Styling */
+    button {
+      width: 100%;
+      padding: 15px;
+      background-color: #9c27b0;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      background-color: #7b1fa2;
+      transform: translateY(-3px);
+    }
+
+    /* Link Styling */
+    .link-container {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .link-container a {
+      color: #9c27b0;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .link-container a:hover {
+      text-decoration: underline;
+    }
+
+    /* Spinner for loading feedback */
+    .spinner-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #9c27b0;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container fade-in" data-aos="fade-up">
+    <header>
+      <img src="https://skillrank.online/images/newlogo.jpeg" alt="SmartED Logo">
+      <h1>SmartED Innovations - SkillRank Admin Portal</h1>
+    </header>
+
+    <h2>Add a New Student</h2>
+
+    <form id="studentForm" novalidate>
+      <div class="form-row">
+        <div>
+          <label for="name"><i class="fas fa-user"></i> Full Name</label>
+          <input type="text" id="name" required>
+        </div>
+
+        <div>
+          <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div>
+          <label for="mobile"><i class="fas fa-phone-alt"></i> Mobile Number</label>
+          <input type="tel" id="mobile" required>
+        </div>
+
+        <div>
+          <label for="university"><i class="fas fa-university"></i> University</label>
+          <input type="text" id="university" required>
+        </div>
+
+        <div>
+          <label for="place"><i class="fas fa-map-marker-alt"></i> Location</label>
+          <input type="text" id="place" required>
+        </div>
+
+        <div>
+          <label for="course"><i class="fas fa-book"></i> Course</label>
+          <input type="text" id="course" required>
+        </div>
+
+        <div>
+          <label for="grade"><i class="fas fa-graduation-cap"></i> Grade</label>
+          <input type="text" id="grade">
+        </div>
+
+        <div>
+          <label for="linkedin"><i class="fab fa-linkedin"></i> LinkedIn Profile</label>
+          <input type="url" id="linkedin">
+        </div>
+
+        <div>
+          <label for="role"><i class="fas fa-briefcase"></i> Role</label>
+          <input type="text" id="role" required>
+        </div>
+
+        <div>
+          <label for="photo"><i class="fas fa-image"></i> Profile Picture</label>
+          <input type="file" id="photo" accept="image/*">
+        </div>
+      </div>
+
+      <button type="submit">Submit</button>
+      <button type="reset" class="btn btn-secondary mt-2">Reset</button>
+    </form>
+
+    <div class="link-container">
+      <a href="table.html">Go to Dashboard</a>
+    </div>
+  </div>
+
+  <div class="spinner-container" id="spinnerContainer">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Bootstrap JS & Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+  <!-- AOS JS for animations -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    document.getElementById('studentForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const form = event.target;
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const university = document.getElementById('university').value.trim();
+      const place = document.getElementById('place').value.trim();
+      const course = document.getElementById('course').value.trim();
+      const role = document.getElementById('role').value.trim();
+      const photo = document.getElementById('photo').files[0];
+
+      // Basic Validation Check
+      if (!name || !email || !mobile || !university || !place || !course || !role) {
+        alert("Please fill out all required fields.");
+        return;
+      }
+
+      // Show the spinner
+      document.getElementById('spinnerContainer').style.display = 'flex';
+
+      const studentData = {
+        name,
+        email,
+        mobile,
+        university,
+        place,
+        course,
+        grade: document.getElementById('grade').value.trim(),
+        linkedin: document.getElementById('linkedin').value.trim(),
+        role,
+        photo: photo ? photo.name : null
+      };
+
+      fetch('https://api.skillrank.online/public/api/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(studentData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('spinnerContainer').style.display = 'none';
+
+        if (data.status === '1602') {
+          alert("Student added successfully.");
+          form.reset();
+        } else {
+          alert("Failed to add student.");
+        }
+      })
+      .catch(error => {
+        document.getElementById('spinnerContainer').style.display = 'none';
+        console.error('Error:', error);
+        alert("There was an error submitting the form.");
+      });
+    });
+  </script>
+</body>
+</html>

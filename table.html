@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillRank Gen-Z Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #9b59b6, #ffffff);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      overflow-x: hidden;
+    }
+    header {
+      background: #8e44ad;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin: 5px 0 0;
+      font-style: italic;
+    }
+    .container {
+      margin: 30px auto;
+      max-width: 90%;
+    }
+    h2 {
+      text-align: center;
+      color: #8e44ad;
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+    .filter-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    select, input[type="password"], button {
+      font-size: 1rem;
+      padding: 12px;
+      border-radius: 20px;
+      border: none;
+      outline: none;
+      margin-right: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    select {
+      background: #dcd6f7;
+      font-weight: bold;
+    }
+    input[type="password"] {
+      background: #f2f2f7;
+    }
+    button {
+      background: #8e44ad;
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #732d91;
+      transform: scale(1.1);
+    }
+    .message {
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+    .message.success {
+      color: #4caf50;
+    }
+    .message.error {
+      color: #f44336;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+    }
+    .card-header {
+      background: linear-gradient(135deg, #8e44ad, #dcd6f7);
+      color: #ffffff;
+      padding: 20px;
+      font-size: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+    }
+    .card-header .icon {
+      font-size: 2rem;
+    }
+    .card-content {
+      padding: 20px;
+      text-align: center;
+    }
+    .card-content p {
+      margin: 5px 0;
+      font-size: 1.1rem;
+    }
+    .card-content a {
+      color: #8e44ad;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .card-content a:hover {
+      text-decoration: underline;
+    }
+    .download-btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 12px 18px;
+      background: #8e44ad;
+      color: #ffffff;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .download-btn:hover {
+      background: #732d91;
+      transform: scale(1.1);
+    }
+    @media screen and (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.6rem;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+    .card:nth-child(odd) {
+      animation-delay: 0.2s;
+    }
+    .card:nth-child(even) {
+      animation-delay: 0.4s;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 SkillRank Dashboard</h1>
+    <p>Your gateway to student excellence 🚀</p>
+  </header>
+  <div class="container">
+    <h2>Explore Students 💼</h2>
+    <div class="filter-container">
+      <select id="courseFilter" onchange="enablePasswordInput()">
+        <option value="">Select a Course 👩‍🎓</option>
+        <option value="MBA">📚 MBA</option>
+        <option value="M.Tech">👨‍🔧 M.Tech</option>
+        <option value="B.Tech">👩‍💻 B.Tech</option>
+        <option value="BBA">📈 BBA</option>
+        <option value="PhD">🔬 PhD</option>
+      </select>
+      <input type="password" id="passwordInput" placeholder="🔒 Enter Password" disabled>
+      <button onclick="requestAccessForCourse()">🔓 Unlock</button>
+      <div id="message" class="message"></div>
+    </div>
+    <div class="grid" id="studentGrid">
+      <!-- Cards will be injected here -->
+    </div>
+  </div>
+
+  <script>
+    let students = [
+      { name: "Aman Sharma", role: "Chief of Staff", course: "MBA", grade: "A", email: "aman.sharma@example.com", mobile: "1234567890", university: "XYZ University", place: "Delhi", linkedin: "https://linkedin.com/in/aman" },
+      { name: "Sara Khan", role: "Project Manager", course: "MBA", grade: "A+", email: "sara.khan@example.com", mobile: "9876543210", university: "ABC University", place: "Mumbai", linkedin: "https://linkedin.com/in/sara" },
+      { name: "Rahul Verma", role: "Data Scientist", course: "M.Tech", grade: "A", email: "rahul.verma@example.com", mobile: "5678901234", university: "LMN Institute", place: "Bangalore", linkedin: "https://linkedin.com/in/rahul" },
+      { name: "Priya Kapoor", role: "Software Engineer", course: "B.Tech", grade: "A", email: "priya.kapoor@example.com", mobile: "6789012345", university: "PQR University", place: "Chennai", linkedin: "https://linkedin.com/in/priya" },
+      { name: "Aditya Nair", role: "Marketing Executive", course: "BBA", grade: "B+", email: "aditya.nair@example.com", mobile: "3456789012", university: "UVW College", place: "Kochi", linkedin: "https://linkedin.com/in/aditya" },
+      { name: "Neha Gupta", role: "Financial Analyst", course: "MBA", grade: "A+", email: "neha.gupta@example.com", mobile: "4567890123", university: "STU School of Business", place: "Hyderabad", linkedin: "https://linkedin.com/in/neha" },
+      { name: "Rohan Das", role: "AI Specialist", course: "PhD", grade: "A", email: "rohan.das@example.com", mobile: "2345678901", university: "XYZ Research Center", place: "Pune", linkedin: "https://linkedin.com/in/rohan" },
+      { name: "Anjali Mehta", role: "Business Analyst", course: "MBA", grade: "A", email: "anjali.mehta@example.com", mobile: "1230984567", university: "ABC Business School", place: "Delhi", linkedin: "https://linkedin.com/in/anjali" },
+    ];
+
+    const coursePasswords = {
+      "MBA": "mba123",
+      "M.Tech": "mtech123",
+      "B.Tech": "btech123",
+      "BBA": "bba123",
+      "PhD": "phd123"
+    };
+
+    function displayStudents() {
+      const grid = document.getElementById('studentGrid');
+      grid.innerHTML = '';
+      const courseFilter = document.getElementById('courseFilter').value;
+      const filteredStudents = students.filter(student => student.course === courseFilter || courseFilter === '');
+      
+      filteredStudents.forEach(student => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-header">
+            <span>${student.name} 🏆</span>
+            <span class="icon">🎓</span>
+          </div>
+          <div class="card-content">
+            <p><strong>Role:</strong> ${student.role} 💼</p>
+            <p><strong>Course:</strong> ${student.course} 📘</p>
+            <p><strong>Grade:</strong> ${student.grade} ⭐</p>
+            <p><strong>Location:</strong> ${student.place} 📍</p>
+            <p><a href="${student.linkedin}" target="_blank">🌐 LinkedIn Profile</a></p>
+            <a class="download-btn" onclick="downloadStudentData('${student.name}')">📥 Download Info</a>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function enablePasswordInput() {
+      const courseFilter = document.getElementById('courseFilter').value;
+      if (courseFilter) {
+        document.getElementById('passwordInput').disabled = false;
+      } else {
+        document.getElementById('passwordInput').disabled = true;
+      }
+    }
+
+    function requestAccessForCourse() {
+      const courseFilter = document.getElementById('courseFilter').value;
+      const password = document.getElementById('passwordInput').value;
+      const messageDiv = document.getElementById('message');
+      
+      if (coursePasswords[courseFilter] === password) {
+        messageDiv.textContent = '✅ Access Granted!';
+        messageDiv.className = 'message success';
+        displayStudents();
+      } else {
+        messageDiv.textContent = '❌ Incorrect Password';
+        messageDiv.className = 'message error';
+      }
+    }
+
+    function downloadStudentData(name) {
+      alert(`📄 Downloading data for ${name}`);
+    }
+  </script>
+</body>
+</html>
